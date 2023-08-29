@@ -1,1 +1,1 @@
-# AY2324S1-Statistical-Arbitrage-Portfolio-Optimisation
+# AY2324S1-ML-Based-Equity-Pairs-PO
