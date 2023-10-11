@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from keras.models import Sequential
-from keras.layers import Dense, LSTM
+from keras.layers import Dense, LSTM, Dropout, GlobalAveragePooling1D
 from sklearn.preprocessing import MinMaxScaler
 
 # Functions for LSTM
@@ -44,6 +44,11 @@ class LstmBuilder():
         model = Sequential()
         model.add(LSTM(self.neutrons, activation='relu', input_shape=(self.time_step, features)))
         model.add(Dense(features))
+        model.add(GlobalAveragePooling1D())
+        model.add(Dense(60,activation='relu'))
+        model.add(Dense(20,activation='relu'))
+        model.add(Dropout(0.05))
+        model.add(Dense(1, activation='linear'))
         model.compile(optimizer='adam', loss=self.loss)
         return model
 
@@ -73,9 +78,15 @@ class LstmBuilder():
         X_train, X_test = X[:train_size], X[train_size:]
         y_train, y_test = y[:train_size], y[train_size:]
 
-        # Adjust test data to be a multiple of batch_size
-        test_size = (len(X_test) // batch_size) * batch_size
-        X_test = X_test[:test_size]
-        y_test = y_test[:test_size]
+        # # Adjust test data to be a multiple of batch_size
+        # test_size = (len(X_test) // batch_size) * batch_size
+        # X_test = X_test[:test_size]
+        # y_test = y_test[:test_size]
+
+        remaining = len(X_test) % batch_size
+        print("Remaining: ", remaining)
+        if remaining != 0:
+            X_test = X_test[:-remaining]
+            y_test = y_test[:-remaining]
 
         return [X_train, X_test, y_train, y_test]
