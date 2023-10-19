@@ -44,7 +44,7 @@ class LstmBuilder():
         model = Sequential()
         model.add(LSTM(self.neutrons, activation='relu', input_shape=(self.time_step, features)))
         model.add(Dense(features))
-        model.add(GlobalAveragePooling1D())
+        # model.add(GlobalAveragePooling1D())
         model.add(Dense(60,activation='relu'))
         model.add(Dense(20,activation='relu'))
         model.add(Dropout(0.05))
